@@ -18,7 +18,7 @@ import SignUpWithData from '../components/SignUp.jsx';
  import UpdateUserWithData from '../components/UpdateUser.jsx';
 
 const httplink=createHttpLink({
-  uri:'http://localhost:9000/.netlify/functions/index'
+  uri:'/.netlify/functions/index'
 });
 
 const authLink=setContext((_,{headers})=>{
