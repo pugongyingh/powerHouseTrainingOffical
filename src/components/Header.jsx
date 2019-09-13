@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
+  whiteAnchor: {
+    color:'#ffffff'
+  },
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -174,12 +177,14 @@ export default function Header(props) {
         <p>Messages</p>
       </MenuItem>
       <MenuItem>
+      <Link to="/notification" style={{display:"inherit"}}>
         <IconButton aria-label="show New notifications" color="inherit">
           <Badge color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
         <p>Notifications</p>
+        </Link>
       </MenuItem>
   <MenuItem>
         <IconButton
@@ -212,7 +217,7 @@ export default function Header(props) {
           <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
           {sideList('left')}
         </Drawer>
-          <Link to="/">
+          <Link to="/" className={classes.whiteAnchor}>
             <Typography className={classes.title} variant="h6" noWrap>
             PowerHouse Training Yard
             </Typography>
