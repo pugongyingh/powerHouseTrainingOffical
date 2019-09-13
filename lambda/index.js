@@ -227,7 +227,7 @@ const resolvers={
                    }
                })
            });
-           await fetch('http://localhost:9000/.netlify/functions/sendemail', {
+           await fetch('/.netlify/functions/sendemail', {
                 method: 'POST',
                 headers: {
                 'Accept': 'application/json',
@@ -314,7 +314,7 @@ const resolvers={
                 packages.startDate=date.getDate()+ '-'+ (date.getMonth() + 1) + '-'+ date.getFullYear();
                 packages.endDate=endDates.getDate()+ '-'+ (endDates.getMonth() + 1) + '-'+ endDates.getFullYear();
                 memberData.package=packages;
-                await fetch('http://localhost:9000/.netlify/functions/sendemail', {
+                await fetch('/.netlify/functions/sendemail', {
                     method: 'POST',
                     headers: {
                     'Accept': 'application/json',
@@ -564,7 +564,7 @@ query getPackageBeforeWeek {
     }
   }
 `;
-request('http://localhost:9000/.netlify/functions/index',query).then(async function (results) {
+request('/.netlify/functions/index',query).then(async function (results) {
         if (results.errors) {
          conssole.log("errror");
           return
