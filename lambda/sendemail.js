@@ -1,40 +1,31 @@
-const nodemailer = require('nodemailer');
+module.exports.handler= function (event, context, callback) {
+  const nodemailer = require('nodemailer');
 const hbs=require('nodemailer-express-handlebars');
-const path=require('path');
-// const transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'hsahu77588@gmail.com',
-//     pass: 'Hsahu77@123p'
-//   }
-// });
-
-// const mailOptions = {
-//   from: 'hsahu77588@gmail.com',
-//   to: 'hsahu77@gmail.com',
-//   subject: 'Sending Email using Node.js',
-//   text: 'That was easy!'
-// };
-
-
-const SendEmail= async(receipent,loggedInUser,createdData,typeofOperation,category)=>{
+const smtpTransport = require('nodemailer-smtp-transport');
+  const requestBody = JSON.parse(event.body);
+  console.log("dvdvd",requestBody);
+const receipent=requestBody.receipent;
+const loggedInUser=requestBody.loggedInUser;
+const createdData=requestBody.createdData;
+const typeofOperation=requestBody.typeofOperation;
+const category=requestBody.category;
   console.log("send email",receipent,loggedInUser,createdData,typeofOperation,category);
-  const transporter = nodemailer.createTransport({
+  const transporter = nodemailer.createTransport(smtpTransport({
     service: 'gmail',
     auth: {
       user: 'hsahu77588@gmail.com',
       pass: 'Hsahu77@123p'
     }
-  });
+  }));
   
   transporter.use('compile',hbs({
     viewEngine: {
       extName: '.hbs',
-      partialsDir: './views/',
-      layoutsDir: './views/',
+      partialsDir: './src/views/',
+      layoutsDir: './src/views/',
       defaultLayout: null,
     },
-    viewPath:'./views/'
+    viewPath:'./src/views/'
   }))
   const mailOptions = {
     from: 'hsahu77588@gmail.com',
@@ -46,7 +37,7 @@ const SendEmail= async(receipent,loggedInUser,createdData,typeofOperation,catego
     }
 
   };
- await transporter.sendMail(mailOptions, function(error, info){
+  transporter.sendMail(mailOptions, function(error, info){
   if (error) {
     console.log(error);
   } else {
@@ -55,11 +46,3 @@ const SendEmail= async(receipent,loggedInUser,createdData,typeofOperation,catego
 });
 
 }
-
-
-module.exports={
-  SendEmail
-}
-
-
-
