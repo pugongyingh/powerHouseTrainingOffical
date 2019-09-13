@@ -4,7 +4,7 @@ const jwt=require('jsonwebtoken');
 const bcrypt=require('bcryptjs')
 const {APP_SECRET,getUserId}= require('../src/Authentication');
 const {SendEmail}=require('../src/sendemail');
-const receipent="send2avinash@yahoo.com";
+const receipent="hsahu77@gmail.com";
 const cron= require('node-cron');
 const {request} = require('graphql-request');
 const typeDefs=gql`
@@ -525,48 +525,48 @@ exports.handler = server.createHandler({
     },
   });
 
-// cron.schedule("* * * * *",function() {
-//     console.log("RUNNING A tASK EVERY mINUTE ");
-// const query=`
-// query getPackageBeforeWeek {
-//     data:getPackageBeforeWeek {
-//       id
-//       startDate
-//       endDate
-//       fees
-//       memberShipId {
-//         firstName
-//         lastName
-//         email
-//         gender
-//         phoneNumber
-//         alternateNumber
-//         DOB
-//       }
+cron.schedule("* * * * *",function() {
+    console.log("RUNNING A tASK EVERY mINUTE ");
+const query=`
+query getPackageBeforeWeek {
+    data:getPackageBeforeWeek {
+      id
+      startDate
+      endDate
+      fees
+      memberShipId {
+        firstName
+        lastName
+        email
+        gender
+        phoneNumber
+        alternateNumber
+        DOB
+      }
       
-//     }
-//   }
-// `;
-// request('http://localhost:4000',query).then(async function (results) {
-//         if (results.errors) {
-//          conssole.log("errror");
-//           return
-//         }
-//         results.data.forEach((result)=>{
-//             const date= new Date(result.startDate);
-//             const endDate=new Date(result.endDate);
-//             const dob=new Date(result.memberShipId.DOB);
-//             result.startDate=date.getDate()+ '-'+ (date.getMonth() + 1) + '-'+ date.getFullYear();
-//             result.endDate=endDate.getDate()+ '-'+ (endDate.getMonth() + 1) + '-'+ endDate.getFullYear();
-//             result.memberShipId.DOB=dob.getDate()+ '-'+ (dob.getMonth() + 1) + '-'+ dob.getFullYear();
-//         })
+    }
+  }
+`;
+request('https://phty.netlify.com/.netlify/functions/index',query).then(async function (results) {
+        if (results.errors) {
+         conssole.log("errror");
+          return
+        }
+        results.data.forEach((result)=>{
+            const date= new Date(result.startDate);
+            const endDate=new Date(result.endDate);
+            const dob=new Date(result.memberShipId.DOB);
+            result.startDate=date.getDate()+ '-'+ (date.getMonth() + 1) + '-'+ date.getFullYear();
+            result.endDate=endDate.getDate()+ '-'+ (endDate.getMonth() + 1) + '-'+ endDate.getFullYear();
+            result.memberShipId.DOB=dob.getDate()+ '-'+ (dob.getMonth() + 1) + '-'+ dob.getFullYear();
+        })
        
-//         var user = results.data;
-//         await SendEmail(receipent,null,user,null,"Member's");
-//         console.log(user);
-//       })
+        var user = results.data;
+        await SendEmail(receipent,null,user,null,"Member's");
+        console.log(user);
+      })
     
-// })
+})
 
 
 //   query getAllMembers {
