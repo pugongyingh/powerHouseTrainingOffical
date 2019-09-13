@@ -3,7 +3,6 @@ const {prisma}= require('../generated/prisma-client');
 const jwt=require('jsonwebtoken');
 const bcrypt=require('bcryptjs')
 const {APP_SECRET,getUserId}= require('../src/Authentication');
-const {SendEmail}=require('./sendemail');
 const receipent="hsahu77@gmail.com";
 const cron= require('node-cron');
 const {request} = require('graphql-request');
@@ -162,7 +161,11 @@ const resolvers={
                         },
                         {
                             address_contains:name
-                        }
+                        },
+                        {
+                            status:name
+                        },
+                        
                     ]
                     
                 }
@@ -224,7 +227,14 @@ const resolvers={
                    }
                })
            });
-           await SendEmail(receipent,loggedInUser,createdUser,"CREATED","User");
+           await fetch('http://localhost:9000/.netlify/functions/sendemail', {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({receipent,loggedInUser,createdData:createdUser,typeofOperation:"CREATED",category:"User"})
+  });
             return createdUser;
 
         }
@@ -304,7 +314,14 @@ const resolvers={
                 packages.startDate=date.getDate()+ '-'+ (date.getMonth() + 1) + '-'+ date.getFullYear();
                 packages.endDate=endDates.getDate()+ '-'+ (endDates.getMonth() + 1) + '-'+ endDates.getFullYear();
                 memberData.package=packages;
-                await SendEmail(receipent,loggedInUser,memberData,"CREATED","Member");
+                await fetch('http://localhost:9000/.netlify/functions/sendemail', {
+                    method: 'POST',
+                    headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({receipent,loggedInUser,createdData:memberData,typeofOperation:"CREATED",category:"Member"})
+      });
                 return packages;
 
             }
@@ -520,12 +537,12 @@ const server=new ApolloServer({
 exports.handler = server.createHandler({
     cors: {
       origin: '*',
-      methods:'GET,POST,PUT',
+      methods:'GET,POST,PUT,OPTIONS, HEAD',
       credentials: true,
     },
   });
 
-cron.schedule("* * * * *",function() {
+cron.schedule("* 17 * * *",function() {
     console.log("RUNNING A tASK EVERY mINUTE ");
 const query=`
 query getPackageBeforeWeek {
@@ -547,7 +564,7 @@ query getPackageBeforeWeek {
     }
   }
 `;
-request('https://phty.netlify.com/.netlify/functions/index',query).then(async function (results) {
+request('http://localhost:9000/.netlify/functions/index',query).then(async function (results) {
         if (results.errors) {
          conssole.log("errror");
           return
@@ -562,7 +579,15 @@ request('https://phty.netlify.com/.netlify/functions/index',query).then(async fu
         })
        
         var user = results.data;
-        await SendEmail(receipent,null,user,null,"Member's");
+        await fetch('http://localhost:9000/.netlify/functions/sendemail', {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({receipent,loggedInUser:null,createdData:user,typeofOperation:null,category:"Member's"})
+});
+        // await SendEmail(receipent,null,user,null,"Member's");
         console.log(user);
       })
     
