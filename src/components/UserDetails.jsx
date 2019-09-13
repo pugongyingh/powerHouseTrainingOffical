@@ -92,9 +92,11 @@ function UserDetails(props) {
                         </section>
                     </article>
                     <section className="displayonlyMb" style={{borderLeft:'none'}}>
+                            <Link to={`/updateMember/${userDetails.id}`}>
                             <Button variant="contained" color="primary" className="buttonSearch noMarginLeft fullWidth">
                                 Edit
                             </Button>
+                            </Link>
                         </section>
                     <Divider style={{marginTop:'20px'}}/>
                     {userDetails.package.length!=0 ? <PackageDetails package={userDetails.package}/> : <div style={{textAlign:'center',fontSize:30}}>No Result Found</div>}
