@@ -579,7 +579,7 @@ request('/.netlify/functions/index',query).then(async function (results) {
         })
        
         var user = results.data;
-        await fetch('http://localhost:9000/.netlify/functions/sendemail', {
+        await fetch('https://objective-albattani-e15dce.netlify.app/.netlify/functions/sendemail', {
             method: 'POST',
             headers: {
             'Accept': 'application/json',
